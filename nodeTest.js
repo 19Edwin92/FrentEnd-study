@@ -1,18 +1,35 @@
 class Rectangle {
-  constructor (width, height) {
-  this.width = width
-  this.height = height
+  #width
+  #height
+  constructor(widthValidity, heightValidity) {
+    this.#width = widthValidity;
+    this.#height = heightValidity;
   }
 
-  getPerimeter () {
-  return (this.width + this.height)*2
+set widthValidity(value) {
+  if (value <= 0) {
+    throw new Error('너비는 0보다 커야 합니다.');
   }
-  getArea () {
-  return this.width*this.height
-  }
-  }
+  this.#width = value;
+}
 
-  const rectangle1020 = new Rectangle(10, 20)
-  const rectangle20200 = new Rectangle(20, 200)
-  console.log(`사각형 둘레 : ${rectangle1020.getPerimeter()}`)
-  console.log(`사각형 넓이 : ${rectangle20200.getArea()}`)
+set heightValidity(value) {
+  if (value <= 0) {
+    throw new Error('높이는 0보다 커야 합니다.');
+  }
+  this.#height = value;
+}
+
+getreturnwidth () {
+  return this.#width
+}
+
+get returnwidth () {
+  return this.#width
+}
+}
+
+const rectangle = new Rectangle(20, 10);
+console.log("this.#width : ", rectangle.getreturnwidth(), "rectangle - ", rectangle)
+rectangle.widthValidity = 30
+console.log("this.#width : ", rectangle.returnwidth, "rectangle - ", rectangle)
