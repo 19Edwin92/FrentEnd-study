@@ -1,35 +1,29 @@
-class Rectangle {
-  #width
-  #height
-  constructor(widthValidity, heightValidity) {
-    this.#width = widthValidity;
-    this.#height = heightValidity;
+// let Person = (function () {
+//   function Person(name) {
+//     this.name = name
+//   }
+
+//   Person.prototype.sayHi = function() {
+//     console.log(`Hi My name is ${this.name}`)
+//   }
+
+//   return Person
+// }())
+
+// const me = new Person('Park')
+// me.sayHi();
+
+class Person {
+  constructor (name) {
+    this.name = name
   }
 
-set widthValidity(value) {
-  if (value <= 0) {
-    throw new Error('너비는 0보다 커야 합니다.');
+  getSayHi () {
+    console.log(`Hi My name is ${this.name}`)
   }
-  this.#width = value;
-}
-
-set heightValidity(value) {
-  if (value <= 0) {
-    throw new Error('높이는 0보다 커야 합니다.');
+  static getName (name) {
+    return `Hi, ${name}`
   }
-  this.#height = value;
 }
 
-getreturnwidth () {
-  return this.#width
-}
-
-get returnwidth () {
-  return this.#width
-}
-}
-
-const rectangle = new Rectangle(20, 10);
-console.log("this.#width : ", rectangle.getreturnwidth(), "rectangle - ", rectangle)
-rectangle.widthValidity = 30
-console.log("this.#width : ", rectangle.returnwidth, "rectangle - ", rectangle)
+console.log(Person.getName('Park'))

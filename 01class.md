@@ -1,388 +1,239 @@
-# Class
-클래스를 이해하기 위해서는 객체지향 프로그램에 대한 이해가 필수이다. 
-객체지향이란 말그대로 프로그래밍에서 `객체를 우선적으로 생각`하는 프로그램이다. 
-여기서 `객체를 우선적으로 생각`한다는 것은 
+# 1. JS Class, 객체를 생성하기 위한 템플릿
+클래스를 이해하기 위해서는 객체지향 프로그래밍에 대한 이해가 선행되어야 한다. 
+객체지향이란 프로그래밍에서 `객체를 중심으로 생각`하는 프로그래밍을 말한다. 
 
-    객체가 가진 `추상화`를 인지하고 이를 지향하며 코드를 작성하는 것을 말한다. 
+## 1.1 함수지향 프로그래밍과 객체지향 프로그래밍
+1. 함수지향 프로그래밍(프로그래밍의 연속성이 강조)
 
-`추상화`에 대한 나의 용어는 `대상에 대한 요소화`이다. 프로그램에 대상이 부여되었을 때 모든 요소를 기록하게 만드는 것은 불필요한 일이다. 반면에 `대상에 대한 요소화`란 부여된 대상에서 프로그램에서 필요하는 요소만 특정하여 `추상화`한 객체를 가진다는 것을 의미한다. 나아가 `대상의 추상화`는 동일하게 사용해야 되는 부분에서 코드의 재사용성을 가능하게 하고, 유지보수성을 향상시킨다. JS에서는 이러한 객체지향 프로그래밍을 위해서 `class`가 등장하여 이를 더욱 용이하게 하였다. 
+    두 가지 서로 다른 프로그래밍 접근 방식이 대표적이다. 먼저 `함수지향`이란 함수를 중심으로 프로그래밍을 하는 방식이다. 함수는 입력을 받아들여서 원하는 작업을 수행한 후 결과를 반환하는 독립적인 블록이다. 함수는 데이터를 조작하고 변형하는 주요한 수단으로, 동일한 입력에 대해 항상 동일한 결과를 보장한다. 
 
----
-## 1.1 Class 객체를 생성하기 위한 템플릿 
-클래스는 문법적으로 `객체를 효울적이고 안전하게 만들어`내는 하나의 붕어빵 틀(템플릿)이다.클래스는 `속성`과 `메서드`로 구성되어 있다. 속성이란 클래스에서 사용할 변수의 모음이고, 메서드란 해당 변수를 사용하여 동작할 기능을 말한다. 클래스를 통해서 생성된 객체는 클래스에서 정의한 속성과 메서드를 활용할 수 있으며, 이러한 동작은 속성과 메서드를 캠슐화하여, 객체의 데이터와 동작을 하나의 단위로 관리한다. 
- 
-1. 첫째, Class 생성
+    한 함수가 끝나면 다음 함수가 실행되는 방식으로, 함수들이 연속적으로 실행되는 것이 특징이다. 
 
-    ```javascript 
-    class className {
-      // setter 부분
-      constructor (매개변수1, 매개변수2) {}
+2. 객체지향 프로그래밍(프로그래밍의 유기적인 상호작용이 강조)
 
-      // getter 부분
-      methods1 () {}
-      methods2 () {}
-    }
+    `객체지향`이란 객체를 중심으로 프로그래밍을 하는 방식이다. 객체는 `데이터`와 `메서드`의 조합이다. 하나의 객체는 또 다른 하나의 객체와의 상호작용을 통해 프로그램을 설계한다.  
 
-    // 새로운 객체 생성, new 키워드
-    const newobj = new className(인자1, 인자2)
-    ```
-
-    클래스는 class를 통해서 선언된다. (소괄호) 없이 `{중괄호}`를 통해서 이뤄지며, 해당 부분에서 `속성`은 constructor(생성자)를 통해 초기화 한다. 이때 생성자의 매개변수는 클래스의 인스턴스를 생성할 때 new 키워드와 함께 전달된다. 
-
-    클래스의 메서드는 생성자를 통해서 생성된 속성에 접근하여 동작을 수행한다. `methods1`와 `methods2`가 여기에 해당된다. 
-
-2. 둘째, Class를 생성하는 사례 살펴보기 
-
-    ```javascript 
-    // 클래스의 기본모델
-    class Rectangle {
-      constructor (width, height) {
-        this.width = width
-        this.height = height
-      }
-
-      getPerimeter () {
-        return (this.width + this.height)*2
-      }
-      getArea () {
-        return this.width*this.height
-      }
-    }
-
-    const rectangle1020 = new Rectangle(10, 20)
-    const rectangle20200 = new Rectangle(20, 200)
-    console.log(`사각형 둘레 : ${rectangle1020.getPerimeter()}`) // 사각형 둘례 : 60
-    console.log(`사각형 둘레 : ${rectangle20200.getArea()}`) // 사각형 넓이 : 4000
-    ```
-
-    `class Rectangle`를 통해서 새로운 객체 `const rectangle1020`를 생성하였다. 해당 객체에 대한 동작은 콘솔에서 볼 수 있듯이 `도트(.)`를 통해서 접근했으며, 결과를 콘솔에 출력하였다. 
+    객체는 한 객체의 작업이 다른 객체에 영향을 줄 수 있는데, 이러한 상호작용을 통해 결과를 도출하는 것이 특징이다. 
 
     <details>
-    <summary>학생별 총점 계산기 Class 만들기 예제</summary>
+    <summary>객체지향 프로그래밍의 'JS에서의 사례'</summary>
+
+    ```javascript 
+    // 구체적인 사례로 설명해보자. 
+    // 플레이어 객체
+    const player = {
+      name: "John",
+      level: 5,
+      health: 100,
+
+      attack(target) {
+        console.log(`${this.name}이(가) ${target.name}을(를) 공격합니다!`);
+        target.health -= 20;
+        console.log(`${target.name}의 체력이 ${target.health} 남았습니다.`);
+      }
+    };
+
+    // 적 객체
+    const enemy = {
+      name: "Goblin",
+      level: 3,
+      health: 50,
+    };
+
+    // 플레이어가 적을 공격하는 상호작용
+    player.attack(enemy);
+    ```
+
+    위의 JS 코드를 실행하면 어떠한 결과를 살펴볼 수 있을까? 아래와 같다. 
+
+    ```bash
+    John이(가) Goblin을(를) 공격합니다!
+    Goblin의 체력이 30 남았습니다.
+    ```
+
+    위의 코드에서 선언한 두 개의 객체(player, enemy)는 각 객체에 대한 속성과 메서드를 가지고 있다. `player.attack(enemy);`는 플레이어가 적을 공격하는 상호작용을 표현한다. 두 객체 간의 상호작용을 통해서 바로 위에 있는 결과를 도출하였다. 흥미로운 점은 객체들 간의 상호작용을 통해 `target.health -= 20` player의 메서드가 호출되었지만, 객체 enemy의 속성을 변경하며 결과를 도출한다는 점이다. 이것이 객체지향 프로그램이 지니는 객체 간의 상호작용을 통한 결과 도출이다. 하나의 독립적인 블록의 연속인 함수지향 프로그래밍과의 차이이다. 이와 같이 객체지향은 독립성보다 유기적인 상호작용이 강조된다. 
+    </details>
+    
+
+## 1.2 객체의 추상화, 객체를 생성하는 Class
+객체는 속성과 메서드를 가진 자료형이다. 여기서 객체의 속성은 `추상화`로 표현할 수 있다. `구체적인 대상에 대한 요소화`라고 표현할 수도 있다. 프로그램이 구체적인 대상에 대한 모든 정보를 가지고 있게 하는 것은 어려운 일이며 불필요한 일이다. 대신 필요한 요소만을 특정하여 이를 담는 것은 효율적인 측면에서 좋은 접근이 될 것이다. `객체의 추상화`란 구체적인 대상으로부터 프로그램이 필요한 요소만을 특정하여 담는 행위를 말한다. 나아가 이러한 `추상화` 작업은 프로그램을 모듈화함으로 프로그래밍의 가독성과 재사용성을 높여준다. JS에서 `Class`는 객체를 `효율적이고 안전하게 만들어 내는 템플릿(하나의 붕어빵)`이다. 
+
+<br/>
+
+---
+## 2. Class 객체를 생성하기 위한 템플릿 
+클래스는 문법적으로 `객체를 효울적이고 안전하게 만들어`내는 하나의 붕어빵 틀(템플릿)이다.클래스는 `속성`과 `메서드`로 구성되어 있다. 속성이란 클래스에서 사용할 변수의 모음이고, 메서드란 해당 변수를 사용하여 동작할 기능을 말한다. 클래스를 통해서 생성된 객체는 클래스에서 정의한 속성과 메서드를 활용할 수 있으며, 이러한 동작은 속성과 메서드를 캠슐화하여, 객체의 데이터와 동작을 하나의 단위로 관리한다. 
+<br/><br/>
+
+1. ES6 이전의 생성자 함수를 통한 객체 생성
+
+    ```javascript 
+    let Person = (function () {
+      // 생성자 함수
+      function Person(name) {
+        this.name = name
+      }
+
+      // 프로토타입 메서드 -> Person에 sayHi를 메서드로 등록
+      // 생성자 함수(Person)로 생성된 모든 인스턴스는 등록된 sayHi메소드를 사용할 수 있다. 
+      Person.prototype.sayHi = function() {
+      console.log(`Hi My name is ${this.name}`)
+      }
+
+    // 생성자 함수를 반환
+    return Person
+    }())
+
+    // 인스턴스 생성
+    const me = new Person('Park')
+    me.sayHi();
+    ```
+
+2. ES6 이후 문법에서 추가된 Class
 
     ```javascript
-    class Student {
-      constructor (이름, 국어, 영어, 수학) {
-        this.이름 = 이름
-        this.국어 = 국어
-        this.영어 = 영어
-        this.수학 = 수학
+    class Person {
+      constructor (name) {
+        this.name = name
       }
 
-      getSum () {
-        return this.국어 + this.영어 + this.수학
-      }
-
-      getAverage () {
-        return this.getSum() /4
-      }
-
-      toString () {
-        return `${this.이름}\t${this.getSum()}점\t${this.getAverage()}점\n`
+      getSayHi () {
+        console.log(`Hi My name is ${this.name}`)
       }
     }
 
-    const students = [];
-    students.push(new Student('구름', 87, 98, 88))
-    students.push(new Student('별이', 87, 98, 88))
-    students.push(new Student('겨울', 87, 98, 88))
-    students.push(new Student('바다', 87, 98, 88))
-    console.log(students)
-    ```
-    콘솔에는 다음과 같이 기록된다.
-    ```bash
-    [
-      Student { '이름': '구름', '국어': 87, '영어': 98, '수학': 88 },
-      Student { '이름': '별이', '국어': 87, '영어': 98, '수학': 88 },
-      Student { '이름': '겨울', '국어': 87, '영어': 98, '수학': 88 },
-      Student { '이름': '바다', '국어': 87, '영어': 98, '수학': 88 }
-    ]
+    const me = new Person('Park')
+    me.getSayHi()
     ```
 
-    위의 코드에 아래와 같이 내용을 추가해보자. 
-    ```javascript 
-    let output = '이름\t총점\t\평균\n';
-    for (const student of students) {
-      ouput += students.toString()
+    1번의 생성자 함수의 사례를 class 문법에서 표현한 내용이다. 런타임에 동일하게 동작한다. 모던자바스크립트는 class에 대해서 `새로운 객체 생성 메커니즘`이라 설명한다. 이 메커니즘이 가지는 이점은 `생성자 함수 기반의 객체  생성보다 견고하고 명료하다`는 것이다. 추후에 보겠지만 클래스의  extends와 super 키워드는 상속 관계 구현을 간결하고 명확하게 표현한다. 
+
+    <details>
+    <summary>첫째, class의 견고함과 명료함</summary>
+
+    클래스는 `속성과 메서드를 하나의 단위로 캡슐화`하여 기능을 그룹화한다. 외부에서의 직접적인 접근을 제한할 수 있다는 점에서 속성과 메서드의 결합을 생성자 함수보다 견고하게 설정한다. 이에 반해 생성자 함수는 프로토타입을 따로 작성해야 했으며, 이는 클래스에 비해 견고함이 느슨해질 수밖에 없었다.(속성과 메서드가 각각 분리되어 정의되기에) 
+    </details>
+    <details> 
+    <summary>둘째, new 연산자와 클래스의 관계</summary>
+
+    생성자 함수로 생성되는 인스턴스(새로운 객체)는 new 연산자를 동반한다. 클래스 역시 새로운 인스턴스를 생성할 때 new 연산자를 동반해야 한다. 그러나 new를 사용하지 않았을 때 차이가 있는데, 생성자 함수는 일반함수로 동작하지만 클래스는 에러를 발생시킨다. 
+    </details>
+    <details> 
+    <summary>셋째, 호이스팅에 있어서의 차이</summary>
+
+    실행컨텍스트에 해당 스텍이 등록되면 선언된 변수와 함수에 대한 호이스팅이 발생된다. 함수는 함수선언문으로 선언했을 때와 함수표현식으로 선언한 차이에 따라 호이스팅이 달라지지만, 클래스는 변수선언 또는 함수표현식과같이 식별자만 호이스팅된다. 내용은 런타임시에 평가된다는 차이가 있음을 기억해야 한다. 
+    </details>  
+    <br/>
+
+## 3. 클래스 다뤄보기 
+클래스는 JS언어에서 일급객체에 해당되는 함수와 같은 특징을 갖는다. (모던자바스크립트는 클래스를 일급객체로 소개한다.) 이는 클래스가 가진 일급객체적인 특성 때문이다. 
+
+- 무명의 리터럴로 생성할 수 있다.(런타임에 생성이 가능하다)
+- 변수나 자료구조 등에 저장할 수 있다. 
+- 함수의 매개변수에 전달할 수 있다.
+- 함수의 반환값으로 사용할 수 있다. 
+- `함수`는 변수에 할당되고, 다른 함수의 인자로 전달되기도 하며, 반환값으로 사용될 수 있다는 점이 특징이다. 
+
+```javascript 
+class Person1 {} // 기본적인 클래스 선언문
+const Person2 = class {} // 익명 클래스 표현식
+const Person3 = class MyClass {} // 기명 클래스 표현식 
+```
+```javascript 
+// 클래스의 기본모델
+class Rectangle {
+  constructor (width, height) {
+    this.width = width
+    this.height = height
+  }
+
+  getPerimeter () {
+    return (this.width + this.height)*2
+  }
+
+  getArea () {
+    return this.width*this.height
+  }
+}
+
+const rectangle1020 = new Rectangle(10, 20)
+const rectangle20200 = new Rectangle(20, 200)
+console.log(`사각형 둘레 : ${rectangle1020.getPerimeter()}`) // 사각형 둘례 : 60
+console.log(`사각형 넓이 : ${rectangle20200.getArea()}`) // 사각형 넓이 : 4000
+```
+
+1. 클래스의 호이스팅
+
+    위에서 언급한 것과 같이 실행 컨텍스트 안에서 해당 스코프에 해당되는 var, let, const, function, funcution*, class 키워드에 대한 모든 식별자는 호이스팅의 대상이다. 그러나 그 값에 있어서 class는 변수 키워드와 같이 그 내용까지 호이스팅되지 않는다. class의 내용은 함수표현식과 변수처럼 런타임 시에 동작된다. 그러기에 새로운 인스턴스 생성이 class 선언보다 먼저 있다면 TDZ(Termporal Dead Zone)에 빠지게 된다. 
+
+2. 클래스의 constructor, 프로토타입메서드, 정적메서드
+
+    <details>
+    <summary>첫째, constructor</summary>
+
+    constructor는 클래스의 인스턴스(객체의 속성)을 생성하고 초기화하기 위한 메서드로 최대 한 개만 존재할 수 있다. constructor는 매개변수를 받을 수 있는데, new 연산자로 새로운 인스턴스를 생성할 때 선언한 인자를 받아 객체의 속성을 초기화한다. 
+
+    ```typescript 
+    // Typescript - class 에서의 타입정의 
+    class Rectangle {
+      width:number;
+      height:number;
+      constructor (width:number, height:number) {
+        this.width = width
+        this.height = height
+      }
     }
-    console.log(output)
+
+    const newRectangle = new Rectangle(10, 10)
     ```
 
-    콘솔에는 다음과 같이 기록된다. JS에서  이스케이프 시퀀스(escape sequence)에 해당되는 `\t`는 출력시 들여쓰기나 정렬 들에서 사용되는 탭을, `\n`은 개행을,  `\'`은 작은 따옴표를 `\"`은 큰따옴표를 나타낸다. 
-    ```bash
-    이름    총점    평균
-    구름    273점   68.25점
-    별이    273점   68.25점
-    겨울    273점   68.25점
-    바다    273점   68.25점
-    ```
+    위의 사례는 TS에서 class를 생성하는 법이다. 클래스에서는 객체 속성에 대한 타입 정의와, 매개변수에 대한 타입 정의가 각각 필요하다. 이때 눈여겨 볼 부분이 객체 속성에 대한 타입 정의로, constructor 밖에서 선언된다는 것을 기억하고 넘어가자. 
 
-    <hr/>
     </details>
 
-3. Class 상속
-  
-    JS는 `프로토타입` 기반의 언어이다.  `프로토타입`은 객체 지향 프로그래밍에서 중요한 개념 중 하나이다. Self 언어에서 처음 도입된 `프로토타입`이라는 개념은 JavaScript의 창시자인 Brendan Eich가 JS를 설계할 때부터 도입되었다. `프로토타입`은 객체를 생성할 때 정의 한 원형 객체에 대해서 객체 간 상속과 프로퍼티를 공유하는 역할에 대한 명칭이다. 이를 통해 객체는 다른 객체의 속성과 메서드를 상속받을 수 있다. 
+    <details>
+    <summary>둘째, 프로토타입 메서드</summary>
 
-    `프로토타입 체인`은 객체가 자신의 프로토타입을 찾을 때 연쇄적으로 상위 프로토타입을 탐색하는 매커니즘을 말한다. 이를 통해서 프로그래밍 언어는 코드 재사용성과 동적인 객체 확장을 가능하게 하였다. 
+     코드에서 `getPerimeter()`와 `getArea()`가 바로 프로토타입 메서드에 해당된다. 두 함수는 class 내의 constructor 메서드와 연결되어 있다. 인스텐스 생성 시 constructor 로 선언된 속성에 접근하여 데이터를 활용한다. class를 통해 생성된 모든 인스턴스들은 constructor에 상속된 `getPerimeter()`와 `getArea()`에 접근하여 동작을 수행한다. 이를 통해 메모리의 중복 사용을 제한하여, 효율적인 메모리 사용을 가능하게 함으로 유지보수와 확장성 측면에서 유리하다. 
+    </details>
 
-    ```javascript 
-    // 클래스의 기본모델
-    class Rectangle {
-      constructor (width, height) {
-        this.width = width
-        this.height = height
-      }
+    <details>
+    <summary>셋째, 정적 메서드</summary>
 
-      getPerimeter () {
-        return (this.width + this.height)*2
-      }
-      getArea () {
-        return this.width*this.height
-      }
-    }
+     정적 메서드는 인스턴스를 생성하지 않아도 호출할 수 있는 메서드이다. 클래스에서 정적 메서느는 static 키워드와 함께 선언된다. 
 
-    // 클래스의 상속
-    class Square extends Rectangle {
-      constructor (one) {
-        super(one, one) // 부모의 생성자 함수를 호출하는 코드 
-      }
-    }
-
-    const square1020 = new Square(10, 20)
-    console.log(`정사각형 둘레 : ${square1020.getPerimeter()}`) // 정사각형 둘레 : 40
-    ```
-
-    `class Square`를 보면 extends 키워드를 통해서 `class Rectangle`의 속성과 메서드를 상속받고 있음을 볼 수 있다. 선택자를 통해서 상위 객체의 속성을 상속받는다. 이때 사용되는 키워드가 `super`이다. 여기서 중요하게 볼 것은 생성자의 매개변수가 하나라는 이야기이다. 클래스를 생성할 때, 인자를 2개 넘겨주었지만 생성자가 받는 매개변수는 1개임으로 10은 유효하지만, 20은 사용되지 않는다는 것을 유의하자. 
-
-    콘솔을 보면 `square1020`에는 없는 메서드인 `getPerimeter()`가 선언되었지만, 동작이 되는 것을 볼 수 있다. 이는 프로토타입을 통해서 상속받은 상위 클래스에 메서드에 접근했기 때문이다. 
-
-
-## 1.2 Class Private 속성 : 객체의 속성을 은닉할 때, 선언 후 변경할 수 없음
-위에서 다룬 `class Rectangle`를 볼 때, 매개변수에 양수가 기록되면 코드는 문제없이 원하는 결과를 산출할 것이다. 그런데 `음수`가 전달된다고 하자. 개발자는 미쳐 생각하지 못했을 수 있다. 음수에 대해서 사전에 조치를 취하려면 조건문으로 코드를 제어할 수 있다. 
-
-```javascript 
-class Rectangle {
-  constructor (width, height) {
-    if(width <= 0 || height <= 0) {
-      throw '너비와 높이는 모두 0보다 커야 합니다'
-    }
-    this.width = width
-    this.height = height
-  }
-}  
-const rectangle100 = new Rectangle(10,0)
-console.log(rectangle100)
-```
-콘솔에는 아래와 같이 표시된다. 
-
-```bash
-너비와 높이는 모두 0보다 커야 합니다
-(Use `node --trace-uncaught ...` to show where the exception was thrown)
-```
-
-그러나 위의 코드는 문제가 있다. 바로 아래와 같은 상황이다.
-```javascript 
-class Rectangle {
-  constructor (width, height) {
-    if(width <= 0 || height <= 0) {
-      throw '너비와 높이는 모두 0보다 커야 합니다'
-    }
-    this.width = width
-    this.height = height
-  }
-}  
-const rectangle1010 = new Rectangle(10,10)
-console.log("rectangle1010", rectangle1010)
-rectangle1010.height = -10
-console.log("rectangle1010", rectangle1010)
-const rectangle100 = new Rectangle(10,0)
-console.log("rectangle100", rectangle100)
-```
-
-먼저 결과를 보자. 
-```bash
-rectangle1010 Rectangle { width: 10, height: 10 }
-rectangle1010 Rectangle { width: 10, height: -10 }
-
-/Users/edwin.youngchan.park/Documents/sparta/inocamp/00. 기타내용/nodeTest.js:61
-      throw '너비와 높이는 모두 0보다 커야 합니다'
-      ^
-너비와 높이는 모두 0보다 커야 합니다
-(Use `node --trace-uncaught ...` to show where the exception was thrown)
-```
-
-`const rectangle1010`를 생성한 다음에 다음 줄에서 `rectangle1010.height = -10`으로 속성을 변경해주었다. 그러나 node는 이를 문제 없이 실행하였다. 즉 조건문에서 걸러지지 않는다는 점이 문제인 것이다. 이는 개발의 의도에서 벗어난 것이다. 이를 위해서 등장한 개념이 Private속성이다. 
-
-Private는 속성을 캡슐화하여 외부에서 접근할 수 없도록 한다. 방법은 간단한다. ES12 이후 등장한 필드(`#`) 선언을 통해서 이를 간단하게 구현할 수 있게 되었다. 다만 필드 선언에 있어서 주의할 점은 생성자 밖에서 필드가 선언되어야 한다는 것이다. 
-
-```javascript 
-class Rectangle {
-  #width
-  #height
-  constructor (width, height) {
-    if(width <= 0 || height <= 0) {
-      throw '너비와 높이는 모두 0보다 커야 합니다'
-    }
-    this.#width = width
-    this.#height = height
-  }
-
-  getObject () {
-    return `너비는 ${this.#width}, 높이는 ${this.#height}`
-  }
-}  
-const rectangle1010 = new Rectangle(10,10)
-console.log("rectangle1010", rectangle1010)
-console.log("rectangle1010", rectangle1010.getObject())
-rectangle1010.height = -100
-console.log("rectangle1010", rectangle1010.getObject())
-```
-
-콘솔의 결과를 살펴보자. 
-
-```bash
-rectangle1010 Rectangle {}
-rectangle1010 너비는 10, 높이는 10
-rectangle1010 너비는 10, 높이는 10
-```
-첫번째 콘솔은 생성된 객체의 내부 속성을 살펴보는 내용인데, 빈객체가 출력된다. 객체 자체가 은닉되었기에 접근할 수 없는 것이다. 두번째 콘솔은 메서드에 접근하는 건인데 값에 도달할 수 있다. 즉 객체의 속성은 선언을 했어도 접근할 수 없지만, 동작에 대한 출력값은 호출하여 볼 수 있다는 내용이다. 세번재 콘솔은 보면 `height`를 통한 접근은 `#height`에 도달하지 못함으로 유효하지 않은 선언이 된다. 즉 결과에 반영하지 못한다. 
-
-```javascript
-rectangle1010.#height = -100
-```
-만약 위와 같이 필드를 선언하여 접근하면 어떻게 될까? `SyntaxError: Private field '#height' must be declared in an enclosing class`와 같은 에러메시지를 볼 수 있다. 필드는 반드시 클래스 안에서만 선언할 수 있다. 
-
-## 1.3 Class setter와 getter
-1. 먼저 `setter`를 살펴보자 
-
-    간단하게 말해서 `setter`는  `constructor`가 속성에 대한 생성과 초기화에 집중하도록한다. `constructor` 내에서 조건을 통하여 매개변수에 대한 유효성검증을 실행할 수 있지만, `setter`는 이를 분리하여 코드의 명료성을 높인다. 
-
-    ```javascript 
-      class Rectangle {
-        constructor (width, height) {
-          if(width <= 0 || height <= 0) {
-            throw '너비와 높이는 모두 0보다 커야 합니다'
-          }
-          this.width = width
-          this.height = height
+     ```javascript
+     class Person {
+        constructor (name) {
+          this.name = name
         }
-      } 
-      const rectangle = new Rectangle(20,10)
-    ``` 
 
-    이를 setter를 통해서 코드를 분리시켜보자. 
-
-    ```javascript  
-    class Rectangle {
-      constructor(widthValidity, heightValidity) {
-        this.width = widthValidity;
-        this.height = heightValidity;
+        getSayHi () {
+          console.log(`Hi My name is ${this.name}`)
+        }
+        static getName (name) {
+          return `Hi, ${name}`
+        }
       }
 
-    set widthValidity(value) {
-      if (value <= 0) {
-        throw new Error('너비는 0보다 커야 합니다.');
-      }
-      this.width = value;
-    }
+      console.log(Person.getName('Park'))
+     ```
 
-    set heightValidity(value) {
-      if (value <= 0) {
-        throw new Error('높이는 0보다 커야 합니다.');
-      }
-      this.height = value;
-    }
-    }
+     위의 코드의 실행은 아래와 같다. 
+     ```bash
+     Hi, Park
+     ```
 
-    const rectangle = new Rectangle(20, 10);
-    console.log(rectangle)
-    ```
+     새로운 인스턴스 생성 없이 메서드만을 실행한다. 인스턴스를 생성하지 않는다는 것은 객체의 속성을 생성하지 않는다는 점이다. constructor와 상관없이 정적 메서드는 class 자체에 바인딩된다. 이렇게 바인된 정적 메서드는 함수 자체로 평가된다. 
+    </details>
 
-2. Private와 setter
+    <details>
+    <summary>프로토타입 메서드와 정적 메서드의 차이</summary>
 
-    `Private`는 Class의 속성을 은닉하여 외부에서 접근하지 못하도록 하는 기능이었다. 그러나 필요에 의해서 은닉된 정보에 접근할 때가 발생되는데, `setter`는 외부에서도 은닉된 속성에 접근할 수 있는 기능을 허용한다. set을 통하여 들어온 매개변수를 통해서 클래서 내부에서 해당 속성에 접근하기 때문이다. 
-
-    ```javascript  
-    class Rectangle {
-      #width
-      #height
-      constructor(widthValidity, heightValidity) {
-        this.#width = widthValidity;
-        this.#height = heightValidity;
-      }
-
-    set widthValidity(value) {
-      if (value <= 0) {
-        throw new Error('너비는 0보다 커야 합니다.');
-      }
-      this.#width = value;
-    }
-
-    set heightValidity(value) {
-      if (value <= 0) {
-        throw new Error('높이는 0보다 커야 합니다.');
-      }
-      this.#height = value;
-    }
-
-    getreturnwidth () {
-      return this.#width
-    }
-    get returnwidth () {
-      return this.#width
-    }
-    }
-
-    const rectangle = new Rectangle(20, 10);
-    console.log("this.#width : ", rectangle.getreturnwidth(), "rectangle - ", rectangle)
-    rectangle.widthValidity = 30
-    console.log("this.#width : ", rectangle.returnwidth, "rectangle - ", rectangle)
-    ```
-
-    위 코드에 대한 콘솔을 살펴보자. 
-    ```bash
-    this.#width :  20 rectangle -  Rectangle {}
-    this.#width :  30 rectangle -  Rectangle {}
-    ```
-
-    `this.#width`는 은닉되었기에 외부에서 속성의 내부 값을 살펴볼 수 없다. 그러나 getter를 통해서 속성의 값을 출력할 수 있는데, 위와 같다. 
-
-
-3. 다음으로는 `getter`에 대해서 살펴보자. 
-  
-    메서드와 `getter`의 가장 큰 차이는 호출에 있다. 메서드는 호출을 위해서 (소괄호)를 동반해야 한다. 즉 메서드임을 규정해주어야 하는 것이다. 반면에 `getter`는 (소괄호) 없이 함수를 호출한다. 즉 클래스의 속성과 같이 함수를 호출한다는 점에 차이가 있다. 메서드와 `getter`는 미묘한 차이가 있는데 둘다 동작을 수행하지만, 메서드는 결과의 반환을 수행하고, `getter`는 동작의 결과로 생성된 속성의 값을 반환한다. 
-
-    ```javascript
-    class Rectangle {
-      constructor (width, height) {
-        this.width = width
-        this.height = height
-      }
-
-      getPerimeter () {
-        return (this.width + this.height)*2
-      }
-      get area () {
-        return this.width*this.height
-      }
-    }
-
-    const rectangle1020 = new Rectangle(10, 20)
-    console.log(rectangle1020.getPerimeter()) // 60
-    console.log(rectangle1020.area) // 200 
-    ```
-
-## 참고자료
-- "혼자공부하는 자바스크립트", 한빛미디어
-
-
-
-
-
-
-
-
-
-
-
+    1. 첫째, 프로토타입 체인 여부 : `프로토타입 메서드`는 인스턴스의 프로토타입 체인에 존재하며, 인스턴스를 통해 호출된다. 반면 `정적 메서드`는 독립적으로 생성되며 클래스 자체에 의해 직접호출된다. 
+    2. 둘째, 인스턴스 생성 여부 : `프로토타입 메서드`는 인스턴스의 생성을 통해서만 호출된다. 이는 프로토타입 메서드의 동작방식에 있다. 반면에 `정적메서드`는 인스턴스를 생성하지 않기에 독립적으로 클래스 자체로 호출될 수 있다. 
+    3. 정적 메서드의 참조 대상 : `정적 메서드`는 인스턴스를 생성하지 않기에, 특정 인스턴스의 속성에 접근할 수 없다. 
+    
+    <br/>
+    이를 풀어서 설명하면, 정적 메서드는 클래스 자체에 속해 있는 메스드라면, 프로토타입은 해당 클래스로 생성된 인스턴스의 프로토타입 체인에 위치한 메서드이다. 그러기에 정적 메서드는 인스턴스 생성과 관계가 없으며, 클래스 자체에 대해 호출되는 메서드로 프로토타입 체인 발생에 영향을 주지 않는다. this의 측면에서 정적메서드와 프로토타입 메서드는 바인딩의 대상이 다른데, 정적메서드는 클래스를, 프로토타입 메서드는 인스턴스를 가리킨다. 
+    </details>
