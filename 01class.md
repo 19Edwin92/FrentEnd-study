@@ -187,7 +187,11 @@ console.log(`사각형 넓이 : ${rectangle20200.getArea()}`) // 사각형 넓�
     const newRectangle = new Rectangle(10, 10)
     ```
 
-    위의 사례는 TS에서 class를 생성하는 법이다. 클래스에서는 객체 속성에 대한 타입 정의와, 매개변수에 대한 타입 정의가 각각 필요하다. 이때 눈여겨 볼 부분이 객체 속성에 대한 타입 정의로, constructor 밖에서 선언된다는 것을 기억하고 넘어가자. 
+    위의 사례는 TS에서 class를 생성하는 법이다. 클래스에서는 객체 속성에 대한 타입 정의와, 매개변수에 대한 타입 정의가 각각 필요하다. 이때 눈여겨 볼 부분이 객체 속성에 대한 타입 정의로, constructor 밖에서 선언된다.
+
+    - 정리하면, 첫째로 클래스의 인스턴스는 new 연산자로 호출하는데, 암묵적으로 빈 객체가 이때 생성되며, 이때 this가 인스턴스에 바인딩된다. 
+    - 둘째, constructor 메서드를 통해 this에 바인딩되어 있는 인스턴스가 초기화되며, 설정된 내용에 따라 프로퍼티를 추가하고, 초기값을 할당한다. 
+    - 셋째, 클래스의 모든 처리가 끝나면 완성된 인스턴스가 바잉딘됭 this가 암묵적으로 반횐된댜.  
 
     </details>
 
@@ -237,3 +241,104 @@ console.log(`사각형 넓이 : ${rectangle20200.getArea()}`) // 사각형 넓�
     <br/>
     이를 풀어서 설명하면, 정적 메서드는 클래스 자체에 속해 있는 메스드라면, 프로토타입은 해당 클래스로 생성된 인스턴스의 프로토타입 체인에 위치한 메서드이다. 그러기에 정적 메서드는 인스턴스 생성과 관계가 없으며, 클래스 자체에 대해 호출되는 메서드로 프로토타입 체인 발생에 영향을 주지 않는다. this의 측면에서 정적메서드와 프로토타입 메서드는 바인딩의 대상이 다른데, 정적메서드는 클래스를, 프로토타입 메서드는 인스턴스를 가리킨다. 
     </details>
+
+## 4. 접근자 프로퍼티 : setter, getter
+접근자 프로퍼티는 자체적으로 값(value)을 가지지 않지만, 다른 데이터 프로퍼티의 값을 읽거나 저장할 때 사용하는 접근자 함수로 구성된 프로퍼티다. 클래스에서는 constructor를 다룸에 있어서 해당 속성을 읽거나 저장할 때 사용하는 용도로 사용된다. 
+
+- setter : 인스턴스 프로퍼티에 값을 할당할 때마다 프로퍼티 값을 조작하거나 별도의 행위가 필요할 때 사용한다. 즉 무언가를 프로퍼티에 할당해야 할 때 사용하므로 매개변수가 필요하다. 주의할 점은 하나의 값만 할당받는 다는 점이다. 
+- getter : 인스턴스 프로퍼티에 접근할 때마다 프로퍼니 값을 조작하거나 별도의 행위가 필요할 때 사용한다. 즉 무언가를 취득할 때 사용하므로 반환값이 있어야 한다. 
+
+<details>
+<summary>1. setter의 활용법 (1) : 입력유효성 검증과 같은 사례</summary>
+
+```javascript  
+class Rectangle {
+  constructor(width, height) {
+    this.widthValidity = width;
+    this.heightValidity = height;
+  }
+
+  set widthValidity(value) {
+    if (value <= 0) {
+      throw new Error('Width must be greater than 0');
+    }
+    this.width = value;
+  }
+
+  set heightValidity(value) {
+    if (value <= 0) {
+      throw new Error('Height must be greater than 0');
+    }
+    this.height = value;
+  }
+}
+
+const rectangle1 = new Rectangle(1, 10);
+console.log("rectangle1 - ", rectangle1)
+const rectangle2 = new Rectangle(-1, 10);
+console.log("rectangle2 - ", rectangle2)
+```
+
+setter를 사용하는 가장 일반적인 사례이다. 클래스(Rectangle)를 통해 인스턴스를 생성할 때, 전달되는 값의 유효성 검증을 실행하고 난 뒤에 속성의 값으로 할당한다. 만약 유효성 검증에 걸리는 값이 대입되면 어떻게 될까? 
+
+```bash
+rectangle1 -  Rectangle { width: 1, height: 10 }
+/nodeTest.js:96
+      throw new Error('Width must be greater than 0');
+      ^
+Error: Width must be greater than 0
+```
+
+여기서 setter를 사용하는 규칙이 있다. constructor 에서 setter를 사용하려면, 해당 접근자 함수를 호출해야 한다는 점(`this.widthValidity`, `this.heightValidity`)이다. `this.setterName = ''`를 통해서 setter 메서드를 호출할 수 있다. 이를 통해서 인스턴스를 생성하기 전에 유효성 검증과 같은 내용을 실행할 수 있다. 
+</details>
+
+<details>
+<summary>2. setter의 활용법 (2) : 인스턴스의 값을 업데이트하기</summary>
+
+```javascript 
+const rectangle = new Rectangle(1, 10);
+console.log("rectangle - ", rectangle)
+rectangle.widthValidity = 100;
+console.log("rectangle - ", rectangle)
+```
+
+외부에서 `this.setterName = ''`를 선언하면, 클래스의 setter가 호출되며, 인스턴스의 값을 업데이트 한다. 콘솔에서는 아래와 같은 결과를 볼 수 있다. 
+
+```javascript
+rectangle -  Rectangle { width: 1, height: 10 }
+rectangle -  Rectangle { width: 100, height: 10 }
+```
+</details>
+
+<details>
+<summary>3. setter의 활용법 (3) : Private(클래스 필드 선언, #)과 setter</summary>
+
+다음 주제에서 살펴보겠지만 Private는 클래스 외부에서 인스턴스에 접근하는 것을 제한할 때 사용된다. 여기서 제한이란 외부에서 인스턴스의 속성을 변경할 수 없는 것을 말한다. 그럼에도 필요에 따라서 인스턴스의 속성에 접근하고자 할 때, setter를 활용할 수 있다. 코드는 해당 주제를 다루면서 제시하려 한다. 
+</details>
+
+<details>
+<summary>4. getter의 활용법 : 인스턴스의 속성을 조작하기</summary>
+
+```javascript
+class Rectangle {
+  constructor (width, height) {
+    this.width = width
+    this.height = height
+  }
+
+  getPerimeter () {
+    return (this.width + this.height)*2
+  }
+  get area () {
+    return this.width*this.height
+  }
+}
+
+const rectangle1020 = new Rectangle(10, 20)
+console.log(new Rectangle(10, 20).getPerimeter()) // 60
+console.log(new Rectangle(10, 20).area) // 200 
+```
+
+위의 클래스에는 `메서드로 선언된 getPerimeter`와 `접근자 함수로 선언된 get area` 가 있다. 런타임 완경에서 두 함수는 내부로직이 동일하다면 동일한 결과를 가져오지만, 호출하는 방식이 다르다. 메서드는 메서드로 호출해야 함으로 (소괄호)를 동반한다. 반면에, 접근자 함수는 속성과 같이 다뤄지기에 (소괄호) 없이도 동작이 이뤄진다. 
+
+</details>
