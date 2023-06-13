@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button>Click Me</button>
+  <br/><br/>
+  <table style="text-align: justify; border:1px solid black">
+    <tr style="color:lightcoral; border-bottom:1px soild black">
+      <th width="150px" style="border-bottom:1px solid black">이벤트종류</th>
+      <th width="100px" style="border-bottom:1px solid black">이벤트횟수</th>
+    </tr>
+    <tr>
+      <td>일반 클릭</td>
+      <td><span class="normal-msg">0</span></td>
+    </tr>
+    <tr>
+      <td>디바운스 이벤트</td>
+      <td><span class="debounce-msg">0</span></td>
+    </tr>
+    <tr>
+      <td>스로틀 이벤트</td>
+      <td><span class="throttle-msg">0</span></td>
+    </tr>
+  </table>  
+  <script>
+    const $button = document.querySelector('button')
+    const $normalMsg = document.querySelector('.normal-msg')
+    const $debounceMsg = document.querySelector('.debounce-msg')
+    const $throttleMsg = document.querySelector('.throttle-msg')
+
+    const debounce = (callback, delay) => {
+      let tiemId;
+      return (...args) => {
+        if(tiemId) clearTimeout(tiemId);
+        tiemId = setTimeout(callback, delay, ...args)
+      }
+    }
+
+    const throttle = (callback, delay) => {
+      let tiemId;
+      return (...args) => {
+        if(tiemId) return;
+        tiemId = setTimeout(()=>{
+          callback(...args);
+          tiemId = null
+        },delay)
+      }
+    }
+
+    $button.addEventListener('click', () => {
+      $normalMsg.textContent = +$normalMsg.textContent + 1;
+    })
+
+    $button.addEventListener('click', debounce(() => {
+      $debounceMsg.textContent = +$debounceMsg.textContent +1;
+    }, 1000));
+
+    $button.addEventListener('click', throttle(() => {
+      $throttleMsg.textContent = +$throttleMsg.textContent +1;
+    }, 1000));
+
+  </script>
+</body>
+</html>
+
+<!--  -->
