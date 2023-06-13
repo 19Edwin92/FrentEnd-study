@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text">
+  <div class="msg"></div>
+  <script>
+    const $input = document.querySelector('input');
+    const $msg = document.querySelector('.msg')
+
+    const debounce = (callback, delay) => {
+      let tiemId;
+      return (...args) => {
+        if(tiemId) clearTimeout(tiemId)
+        tiemId = setTimeout(callback, delay, ...args)
+      };
+    };
+
+    $input.oninput = debounce(e => {
+      $msg.textContent = e.target.value;
+    }, 1000)
+  </script>
+  
+</body>
+</html>
