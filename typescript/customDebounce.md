@@ -120,25 +120,47 @@ customDebounceUseCallback() 함수에 아마도 "문자열"이 인자로 담겨�
 ```
 결과의 코드만 봤을 때, `customDebounceUseCallback(e.target.value)`은  `(...args:[string])`에 할당되고, 그 결과 `timeId = setTimeout(() => callback(...args), delay)`를 실행하는 것이다. 다소 복잡하지만 (...args)는 나머지 매개변수로 얼마의 인자가 들어올지 모를 때 선언하는 부분이다. ES6에서 도입되었다. 그러나 인자와 매겨변수의 관계를 바로 알면 `text`와 같이 단순하게 하나의 인수만 받아도 될 것이고, 그렇다면 타입 설정을 `string`으로 해도 될 것이다. 어제부터 오늘까지  `(...args:[string])`가 무엇인가에 대해서 고민하느라 시간을 소비했지만, 함수에 대해서 조금 더 알게 된 것 같다.
 
-위에서는 단순하게 넘어갔지만, `customDebounce()`는 클로저인데 생성 당시의 timeId 변수의 값을 참조하고 이를 계속 추적하도록 만들었다. 아래의 코드는 위의 분리된 코드를 하나로 보기 위해 만든 js 폴더이다. node에서 실행하면 같은 결과를 얻을 수 있다. 
+위에서는 단순하게 넘어갔지만, `customDebounce()`는 클로저인데 생성 당시의 timeId 변수의 값을 참조하고 이를 계속 추적하도록 만들어 놓은 것이다. 위의 코드를 이해하고자 한 내용을 아래와 같이 정리해보았다.  
 
-```javascript 
-const customDebounceUseCallback2 = (() => {
-  let timeId = null;
-  const closer = (callback, delay) => {
-    return (arg) => {
-      if (timeId) clearTimeout(timeId);
-      timeId = setTimeout(() => callback(arg), delay);
-    };
-  };
-  const customDebounceCallback = closer((text) => {
-    console.log(text);
-  }, 2000);
-  return customDebounceCallback;
-})();
+```bash
+01 customDebounceUseCallback 호출 > 인수 : "문자열"
+02 customDebounceUseCallback 함수 > 인수 : "문자열" 받는 매개변수를 설정 안했는데, 어떻게 동작하지
+03 customDebounceUseCallback > customDebounce 호출 (callback, delay)
+04 customDebounce > customDebounce (callback, delay) return (arg)??????????????? 
 
-customDebounceUseCallback2("문자열");
+⬇︎⬇︎⬇︎⬇︎ 함수실행의 결과로 만들어진, 
+const customDebounceUseCallback = (text) => {
+   if (timeId) clearTimeout(timeId)
+   timeId = setTimeout(() => callback(text), delay) 
+}
+```
+</details>
 
+이제 Typescript에 대한 부분이다. 왜 `(...args:[string])`가 되었는가? 몇개의 인수로 몇개를 받을 지 전제되지 않은 상황일 때를 가정했기에 강의나, 구글링은 이를 나머지 매개변수로 설정한 것이었다. 내가 들었던 강의는 JSX 였기에 TSX에서의 해당 부분이 더 이해가 되지 않았다. 그러나 위의 결과를 통해서 어떠한 결과에 따라서 해당 부분에 대한 타입이 선언되는지 고찰하였다. 
+
+```tsx
+  const customDebounce = 
+    (callback:(text:string)=>void, delay:number)  => {
+      let timeId:NodeJS.Timeout | null = null;
+      return (...args:[string]) => {
+        if(timeId) clearTimeout(timeId)
+        timeId = setTimeout(() => callback(...args), delay) 
+      }
+    }
 ```
 
-</details>
+그렇다면 아래와 같이 코드를 수정해도 될 것이다. 
+
+```tsx
+const customDebounce = 
+    (callback:(text:string)=>void, delay:number)  => {
+      // console.log("DebounceCustom 동작")
+      let timeId:NodeJS.Timeout | null = null;
+      // 클로저의 특성으로 외부 변수(timeId)를 참조합니다. 
+      return (text:string) => { // 왜 [] 빈배열로 들어오는가 
+        if(timeId) clearTimeout(timeId)
+        timeId = setTimeout(() => callback(text), delay) 
+      }
+    }
+```
+받아올 인수가 하나이고, 해당 인수에 대한 타입을 알고 있기 때문이다. 그렇다면 (...나머지매개변수)를 통한 배열 생성이 아닌, `string`을 직접 지정할 수 있는 것이다. 

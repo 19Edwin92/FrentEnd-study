@@ -9,10 +9,37 @@ const customDebounce = (callback, delay)  => {
 const customDebounceUseCallback = customDebounce((text) => { 
     console.log(text)
   }, 
-  2000 
+  5000 
 )  
 
 customDebounceUseCallback("문자열");
+
+// 01 customDebounceUseCallback 호출 > 인수 : "문자열"
+// 02 customDebounceUseCallback 함수 > 인수 : "문자열" 받는 매개변수를 설정 안했는데, 어떻게 동작하지? ?? "문자열??"
+// 03 customDebounceUseCallback > customDebounce 호출 (callback, delay)
+// 04 customDebounce > customDebounce (callback, delay) return (arg)??????????????? 
+
+
+// ⬇︎⬇︎⬇︎⬇︎ 함수실행의 결과로 만들어진, 
+// const customDebounceUseCallback = (text) => {   // customDebounceUseCallback("문자열") >> (arg)
+//   if (timeId) clearTimeout(timeId)
+//   timeId = setTimeout(() => callback(text), delay) 
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 
