@@ -74,21 +74,71 @@ customDebounceUseCallback() 함수에 아마도 "문자열"이 인자로 담겨�
 </details>
 
 <details>
-<summary>2. customDebounceUseCallback(e.target.value)  // "문자열" 할당은 언제? </summary>
-  <div style="margin-left:20px;">
-  <details>
-  <summary>(1) customDebounceUseCallback함수의 실행 </summary>
+<summary>2. e.target.value의 할당 (1) customDebounceUseCallback함수의 실행 </summary>
 
-      ```tsx
-          // eslint-disable-next-line
-          const customDebounceUseCallback = useCallback(
-            customDebounce((text) => {
-              setPrintInput3(text)
-            }, 
-            2000)
-            ,[]
-          )
-      ```
-  </details>
-  <div>
+`customDebounceUseCallback()`는 호출되어 동작하며 `customDebounce()`를 다시 호출시킨다. 이때 메모이제이션을 통해 컴포넌트가 리랜더링 되더라고 함수가 새로 생성되어 새로운 참조값을 가지지 않도록 함으로 내부에서 동작할 timeId의 등록과 초기화가 개발의도에 따라 동작할 준비를 하였다. 
+
+호출된 `customDebounce()`는 아래의 두 개의 인수를 매개변수로 가져간다. 
+- callback() : `(text) => {setPrintInput3(text)}`
+- delay : `2000`
+
+```tsx
+    // eslint-disable-next-line
+    const customDebounceUseCallback = useCallback(
+      customDebounce((text) => {
+        setPrintInput3(text)
+      }, 
+      2000)
+      ,[]
+    )
+```
+</details>
+
+<details>
+<summary>3. e.target.value의 할당 (1) customDebounce의 실행 </summary>
+아래 코드에서 볼 때, 중요하게 볼 부분은 return 이다. 일단 코드를 해석하기 전에 결과를 살펴보자. 
+
+```tsx
+    const customDebounce = 
+    (callback:(text:string)=>void, delay:number)  => {
+      let timeId:NodeJS.Timeout | null = null;
+      return (...args:[string]) => {
+        if(timeId) clearTimeout(timeId)
+        timeId = setTimeout(() => callback(...args), delay) 
+      }
+    }
+```
+위의 코드의 결과 `customDebounce()`은 아래와 같은 익명함수가 되는 것과 마찬가지이다. 
+
+```tsx
+    const customDebounceUseCallback = useCallback(
+      (...args:[string]) => {
+        if(timeId) clearTimeout(timeId)
+        timeId = setTimeout(() => callback(...args), delay) 
+      }
+    )
+```
+결과의 코드만 봤을 때, `customDebounceUseCallback(e.target.value)`은  `(...args:[string])`에 할당되고, 그 결과 `timeId = setTimeout(() => callback(...args), delay)`를 실행하는 것이다. 다소 복잡하지만 (...args)는 나머지 매개변수로 얼마의 인자가 들어올지 모를 때 선언하는 부분이다. ES6에서 도입되었다. 그러나 인자와 매겨변수의 관계를 바로 알면 `text`와 같이 단순하게 하나의 인수만 받아도 될 것이고, 그렇다면 타입 설정을 `string`으로 해도 될 것이다. 어제부터 오늘까지  `(...args:[string])`가 무엇인가에 대해서 고민하느라 시간을 소비했지만, 함수에 대해서 조금 더 알게 된 것 같다.
+
+위에서는 단순하게 넘어갔지만, `customDebounce()`는 클로저인데 생성 당시의 timeId 변수의 값을 참조하고 이를 계속 추적하도록 만들었다. 아래의 코드는 위의 분리된 코드를 하나로 보기 위해 만든 js 폴더이다. node에서 실행하면 같은 결과를 얻을 수 있다. 
+
+```javascript 
+const customDebounceUseCallback2 = (() => {
+  let timeId = null;
+  const closer = (callback, delay) => {
+    return (arg) => {
+      if (timeId) clearTimeout(timeId);
+      timeId = setTimeout(() => callback(arg), delay);
+    };
+  };
+  const customDebounceCallback = closer((text) => {
+    console.log(text);
+  }, 2000);
+  return customDebounceCallback;
+})();
+
+customDebounceUseCallback2("문자열");
+
+```
+
 </details>
