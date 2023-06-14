@@ -2,7 +2,7 @@
 
 리액트 Typescript에서 CustomDebounce를 작성하고 있다. 물론 lodash의 debounce 메서드를 통해서 쉽게 구현할 수 있지만, 어렵게 구현할 줄도 알아야 하지 않을까? 
 
-<div id="debounceHnadCoding" align="center"><img src='../img/debounceHnadCoding.jpg' width="100%"></div>
+<div id="debounceHnadCoding" align="center"><img src='../img/debounceHnadCoding.jpg' width="70%"></div>
 
 <details>
 <summary>[토글] 코드 자체는 구현했다. 다음은 먼저 GPT의 도움과 각종 레퍼런스를 통해서 구현한 코드이다</summary>
