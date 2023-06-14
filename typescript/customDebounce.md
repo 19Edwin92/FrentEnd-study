@@ -59,4 +59,36 @@ const Debounce: React.FC = () => {
 
 `return (...args:[string])`에 갑자기 등장한 아이는 누구인가. 또한 timeId를 동록하는 곳에 등장하는 `timeId = setTimeout(() => callback(...args), delay)`에서 (...args)는 누구인가라는 것이다. 
 
-이를 이해하기 위한 손코딩의 과정이 [위의 이미지](#debounceHnadCoding)이다. 부질없었다. 
+이를 이해하기 위한 손코딩의 과정이 [위의 이미지](#debounceHnadCoding)이다. 그래도 도전은 응원한다. 다음 번에는 더 다양하게 생각하고 접근해 보자. 
+
+코드를 이해하고자 했다. 
+
+<details>
+<summary>1. handleInputChange() 함수가 호출될 때</summary>
+
+```tsx
+customDebounceUseCallback(e.target.value)  // "문자열"
+```
+
+customDebounceUseCallback() 함수에 아마도 "문자열"이 인자로 담겨서 전달될 것이다. 
+</details>
+
+<details>
+<summary>2. customDebounceUseCallback(e.target.value)  // "문자열" 할당은 언제? </summary>
+  <div style="margin-left:20px;">
+  <details>
+  <summary>(1) customDebounceUseCallback함수의 실행 </summary>
+
+      ```tsx
+          // eslint-disable-next-line
+          const customDebounceUseCallback = useCallback(
+            customDebounce((text) => {
+              setPrintInput3(text)
+            }, 
+            2000)
+            ,[]
+          )
+      ```
+  </details>
+  <div>
+</details>
