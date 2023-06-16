@@ -10,7 +10,7 @@
   <br/><br/>
   <table style="text-align: justify; border:1px solid black">
     <tr style="color:lightcoral; border-bottom:1px soild black">
-      <th width="150px" style="border-bottom:1px solid black">이벤트종류</th>
+      <th width="250px" style="border-bottom:1px solid black">이벤트종류</th>
       <th width="100px" style="border-bottom:1px solid black">이벤트횟수</th>
     </tr>
     <tr>
@@ -22,8 +22,12 @@
       <td><span class="debounce-msg">0</span></td>
     </tr>
     <tr>
-      <td>스로틀 이벤트</td>
+      <td>스로틀 이벤트(처음에만)</td>
       <td><span class="throttle-msg">0</span></td>
+    </tr>
+    <tr>
+      <td>스로틀 이벤트(시작끝)</td>
+      <td><span class="throttleWithLeadingAndTrailing-msg">0</span></td>
     </tr>
   </table>  
   <script>
@@ -31,6 +35,7 @@
     const $normalMsg = document.querySelector('.normal-msg')
     const $debounceMsg = document.querySelector('.debounce-msg')
     const $throttleMsg = document.querySelector('.throttle-msg')
+    const $throttleWithLeadingAndTrailingMsg = document.querySelector('.throttleWithLeadingAndTrailing-msg')
 
     const debounce = (callback, delay) => {
       let tiemId;
@@ -51,6 +56,32 @@
       }
     }
 
+    const throttleWithLeadingAndTrailing = (callback, delay) => {
+      let timerId;
+      let leadingExecuted = false;
+      return (...args) => {
+        if (!leadingExecuted) {
+          callback(...args);
+          leadingExecuted = true;
+          timerId = setTimeout(() => {
+            leadingExecuted = false;
+            if (timerId) {
+              callback(...args);
+              timerId = null;
+            }
+          }, delay);
+        } else {
+          clearTimeout(timerId);
+          timerId = setTimeout(() => {
+            callback(...args);
+            timerId = null;
+            leadingExecuted = false;
+          }, delay);
+        }
+      };
+    };
+
+
     $button.addEventListener('click', () => {
       $normalMsg.textContent = +$normalMsg.textContent + 1;
     })
@@ -63,6 +94,9 @@
       $throttleMsg.textContent = +$throttleMsg.textContent +1;
     }, 1000));
 
+    $button.addEventListener('click', throttleWithLeadingAndTrailing(() => {
+      $throttleWithLeadingAndTrailingMsg.textContent = +$throttleWithLeadingAndTrailingMsg.textContent +1;
+    }, 1000));
   </script>
 </body>
 </html>

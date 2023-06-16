@@ -1,18 +1,17 @@
 const customDebounce = (callback, delay)  => {
   let timeId = null;
-  return (arg) => {
+  return (arg) => {   // arg???? 
     if (timeId) clearTimeout(timeId)
     timeId = setTimeout(() => callback(arg), delay) 
   }
 } 
 
-const customDebounceUseCallback = customDebounce((text) => { 
-    console.log(text)
-  }, 
-  5000 
+const customDebounceUseCallback = customDebounce(
+  (text) => { console.log(text)}, 5000 
 )  
 
 customDebounceUseCallback("문자열");
+
 
 // 01 customDebounceUseCallback 호출 > 인수 : "문자열"
 // 02 customDebounceUseCallback 함수 > 인수 : "문자열" 받는 매개변수를 설정 안했는데, 어떻게 동작하지? ?? "문자열??"
@@ -25,21 +24,6 @@ customDebounceUseCallback("문자열");
 //   if (timeId) clearTimeout(timeId)
 //   timeId = setTimeout(() => callback(text), delay) 
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   
 
