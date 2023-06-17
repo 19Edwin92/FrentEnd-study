@@ -4,3 +4,7 @@
 [25. class 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/25.class.md)<br/>
 [41. 디바운스, 스로틀 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/41.debounce&throttle.md)<br/>
 [44. Rest-API 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/44.REST-API.md)
+
+
+다음은 `리액트`에 대한 공부를 간략하게 기록한 부분이다. 
+[01. 성능최적화](https://github.com/19Edwin92/JS-study/blob/main/modernjs/01성능최적화.md)
