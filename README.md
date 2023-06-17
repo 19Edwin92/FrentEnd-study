@@ -7,4 +7,5 @@
 
 
 다음은 `리액트`에 대한 공부를 간략하게 기록한 부분이다. 
-[01. 성능최적화](https://github.com/19Edwin92/JS-study/blob/main/modernjs/01성능최적화.md)
+
+[01. 성능최적화](https://github.com/19Edwin92/JS-study/blob/main/REACT/01성능최적화.md)
