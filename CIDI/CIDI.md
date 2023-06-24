@@ -1,0 +1,2 @@
+- 우대사항 
+- gitAction CICD - https://coding-orca.tistory.com/13 - 프론트엔드에서의 CICD
