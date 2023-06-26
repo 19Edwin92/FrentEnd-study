@@ -28,3 +28,6 @@
 
 [01. 애자일-스크럼](https://github.com/19Edwin92/JS-study/blob/main/programmingPhilosophy/01애자일-스크럼.md)<br/>
 
+
+##  DX : 개발자들의 개발경험향상 
+- UX는 사용자 개발을 향상한다면, DX는 개발의 경험을 향상시킬 수 있는 경험을 제공하는 개념이다. 
