@@ -19,6 +19,10 @@
 - [05-01. 중첩라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01중첩라우터.md)<br/>
 - [05-02. 프로텍티드라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01프로텍티드라우터.md)<br/>
 
+[06. 쿠키set&get](https://github.com/19Edwin92/JS-study/blob/main/REACT/06쿠키set&get.md)<br/>
+[07. 상태관리라이브러리(1)Redux](https://github.com/19Edwin92/JS-study/blob/main/REACT/07상태관리라이브러리(1)Redux.md)<br/>
+
+- [07-01. ReactRedux v6.x.x(connect), v7.x.x(useSelect, useDispatch)](https://github.com/19Edwin92/JS-study/blob/main/REACT/ReactRedux/ReactReduxv6v7.md)<br/>
 
 
 ## 다음은 `타입스크립트의 타입정의`에 대한 공부를 간략하게 기록한 부분이다. 
@@ -34,3 +38,26 @@
 
 ##  DX : 개발자들의 개발경험향상 
 - UX는 사용자 개발을 향상한다면, DX는 개발의 경험을 향상시킬 수 있는 경험을 제공하는 개념이다. 
+
+
+## 이노캠 특강 
+
+<details>
+<summary>1. 김태선 튜터 - 연봉 1억!! 개발자</summary>
+
+- "메타인지" - 적절성을 찾아가는 것
+  - 학습에 있어서 : 오늘의 주제에 대해서 내가 아는 것 모르는 것 정리
+  - 현업에 있어서 : 회사의 주제에 대해서 내가 아는 것 모르는 것 정리
+  - (학습, 현업) :  TIL, WIL를 통해서 아는 것 늘려가기 
+
+- "문제를 해결한 사람 vs 문제를 해결한 척" - 오늘의 뉴턴, 머스크 형
+  - 직접 겪었던 문제를 해결하기 위해 결정했던 선택과 과정에 대한 기록이 있는 사람
+  - 정확히, 세부사항까지 말할 수 있는 사람을 채용합니다. 
+
+- 직업이 아닌, 겸손한 커뮤니케이션 역량을 갖춘 개발자
+  - 개발이란 부분이 명확한 답이 없기에, 상대방이 기분 나쁘지 않게 말하는 것이 기본!! 
+  - 나아가 단순 기능구현이 아니라, 서비스적 차원에서 개발하는 모습이 필요합니다. 
+  - 단순기능개발 : 개발자 연봉을
+  - 서비스개발 : 개발자 + 보너스 연봉을
+</details>
+ 
