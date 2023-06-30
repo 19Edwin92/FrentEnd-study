@@ -106,6 +106,8 @@
 
 2. `React-Redux 6.x.x와 connect`는 정리하면, 리덕스 시스템에서 프리젠테이션 컴포넌트에 전달할 props에 대한 로직을 처리할 컨테이너 컴포넌트를 제공하는 메소드로 선언된 `props의 객체`를 하나로 묶고, 이를 전달한 컴포넌트로 전달함으로 구성하는 것이다.  
 
+
+## ReactRedux 버전 7.x.x - useDispatch, useSelector
 <details>
 <summary>React-Redux 7.x.x와 connect 코드살펴보기</summary>
 
