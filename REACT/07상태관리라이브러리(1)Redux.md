@@ -12,6 +12,7 @@
 - 여기서 등장하는 개념이 [`Immutable`](https://velopert.com/3486)이다. `yarn add immutable`패키지는 이를 도와준다. 객체는 Map 메소드를, 배열은 List 메서드를 통해서 불변객체를 생성한다. 
 
 셋째, 변화를 일으키는 함수, 리듀서는 순수한 함수여야 한다. 
+- `순수함수`란 동일한 입력에 대해서는 항상 동일한 출력을 반환하는 함수라는 뜻이다. 즉 `예측이 가능하고 디버깅이 쉬운 코드`가 순수함수의 조건이다. 또한 함수 내부에서 외부의 상태를 변경하지 않아야 한다. 
 
 <hr/>
 
@@ -20,7 +21,7 @@
     yarn add redux react-redux
     ```
     - redux 는 리덕스 자체
-    - react-redux 는 리액트에서 리덕스를 사용할 수 있도록 도와주는 라이브러리
+    - react-redux 는 리액트에서 리덕스를 사용할 수 있도록 도와주는 라이브러리(`useSelector()`, `useDispatch()`)
 <br/><br/>    
 
 2. 리덕스의 폴더구조
@@ -31,6 +32,10 @@
     |   ├─ config 
     |   |   └─ configStore.js
     |   └─ modules
+    |       ├─ itemReducer1.js # counter.js
+    |       ├─ itemReducer2.js # todos.js
+    |       └─ itemReducer3.js
+    |
     ```
 
     - redux : 리덕스 관련 코드의 폴더
@@ -461,6 +466,7 @@
     - Action creator 함수들을 `export` 한다.
     - Action type은 `app/reducer/ACTION_TYPE` 형태로 작성한다.
     - 즉, 모듈 파일 1개에 Action Type, Action Creator, Reducer 가 모두 존재하는 작성방식
+<br/><br/>
 
 10. 리덕스 legacy_createStore(기존의 `CreateStore`)     
 
@@ -530,7 +536,7 @@
     문제가 된 에러 메시지는 아래와 같다. 
 
     ```bash
-    Invariant failed: A state mutation was detected inside a dispatch, in the path: todoList.0.state. Take a look at the reducer(s) handling the action {"type":"UPDATE_TODO","payload":1}. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)
+    # Invariant failed: A state mutation was detected inside a dispatch, in the path: todoList.0.state. Take a look at the reducer(s) handling the action {"type":"UPDATE_TODO","payload":1}. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)
     ```
 
     해당 문제는 Redux 스토어에서 상태를 변경하는 동안에 발생한 불변성 위반에 대한 에러이다. Redux는 상태 변경을 추적하기 위헤 불변성을 강조한다. 즉 스토어의 상태를 직접적으로 수정하는 것이 지양된다는 점이다. 새로운 상태 객체를 반환해야 한다. 문제는 `todoList.0.state`를 직접 변경하고자했기 때문이다. 
@@ -542,14 +548,7 @@
     newTodos[findIndex].state = !newTodos[findIndex].state
     ```
 
-    기존의 Redux에 문제가 없었지만, `@reduxjs/toolkit`으로 코드를 수정하며 문제가 발생되었다. `@reduxjs/toolkit`는 `createSlice`와 `createReducer`와 같은 함수를 사용하여 상태 업데이트 진행하며, 내부적으로  `immer`라는 라이브러리를 사용하여 불변성을 유지를 감지한다고 한다. `@reduxjs/toolkit`에서는 불변성 위반 문제를 이 과정에서 감지를 했기에, 에러가 발생된 것이다. 
-
-
-
-
-
-
-<br/><br/>
+    기존의 Redux에 문제가 없었지만, `@reduxjs/toolkit`으로 코드를 수정하며 문제가 발생되었다. `@reduxjs/toolkit`는 `createSlice`와 `createReducer`와 같은 함수를 사용하여 상태 업데이트 진행하며, 내부적으로  `immer`라는 라이브러리를 사용하여 불변성을 유지를 감지한다고 한다. `@reduxjs/toolkit`에서는 불변성 위반 문제를 이 과정에서 감지를 했기에, 에러가 발생된 것이다. <br/><br/>
 
 11. Redux 데브툴 관련 설정 
     ```bash
