@@ -113,6 +113,19 @@ Axios는 node.js와 브라우저를 위한 Promise 기반 HTTP 통신 라이브�
         token && config.headers.Authorization = `Bearer ${token}`;
         return config;
       });
+
+      // 이를 function 키워드와 함께 에러시를 함께 핸들링 하면 아래와 같다. 
+      instaaxiosnce.interceptors.request.use(
+        function (config) {
+          console.log("인터셉터 요청 성공!");
+          config.headers.Authorization = token ? `Bearer ${token}` : "";
+          return config
+        },
+        function (error) {
+          console.log("인터셉터 요청 오류!");
+          return Promise.reject(error)
+        } 
+      )
       ```
 
     - 응답시 
