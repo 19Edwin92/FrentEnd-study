@@ -1,5 +1,13 @@
-# JS-study
-## 다음의 목차는 `모던 자바스크립트 딥 다이브`의 목차를 따른 정리입니다. 내가 이해하기 위해 만든 JS-study-note
+# A Piece of FrontEnd Development
+### 내가 이해하기 위해 만든 FrentEnd-study-note
+1. 모던 자바스크립트 딥다이브
+2. 리액트
+3. 타입스크립트
+4. 프로그래밍 철학
+5. CS지식 
+
+
+## `모던 자바스크립트 딥 다이브`
 
 [25. class 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/25.class.md)<br/>
 [34. 이터러블, 이터레이터 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/34.iterable.md)<br/>
@@ -8,7 +16,7 @@
 [44. Rest-API 정리 ](https://github.com/19Edwin92/JS-study/blob/main/modernjs/44.REST-API.md)<br/>
 
 
-## 다음은 `리액트`에 대한 공부를 간략하게 기록한 부분이다. 
+## `리액트`
 
 [01. 성능최적화](https://github.com/19Edwin92/JS-study/blob/main/REACT/01성능최적화.md)<br/>
 [02. 아토믹디자인](https://github.com/19Edwin92/JS-study/blob/main/REACT/02아토믹디자인.md)<br/>
@@ -16,25 +24,34 @@
 [04. Asios&interceptor](https://github.com/19Edwin92/JS-study/blob/main/REACT/04Asios&interceptor.md)<br/>
 [05. 리액트라우터돔](https://github.com/19Edwin92/JS-study/blob/main/REACT/05리액트라우터돔.md)<br/>
 
-- [05-01. 중첩라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01중첩라우터.md)<br/>
-- [05-02. 프로텍티드라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01프로텍티드라우터.md)<br/>
+- [중첩라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01중첩라우터.md)<br/>
+- [프로텍티드라우터](https://github.com/19Edwin92/JS-study/blob/main/REACT/react-router-dom/05-01프로텍티드라우터.md)<br/>
 
 [06. 쿠키set&get](https://github.com/19Edwin92/JS-study/blob/main/REACT/06쿠키set&get.md)<br/>
 [07. 상태관리라이브러리(1)Redux](https://github.com/19Edwin92/JS-study/blob/main/REACT/07상태관리라이브러리(1)Redux.md)<br/>
+[08. 상태관리라이브러리(2)ReduxThunk](https://github.com/19Edwin92/JS-study/blob/main/REACT/08상태관리라이브러리(2)ReduxThunk.md)<br/>
+[09. 상태관리라이브러리(3)RTKquery](https://github.com/19Edwin92/JS-study/blob/main/REACT/09상태관리라이브러리(3)RTKquery.md)<br/>
 
-- [07-01. ReactRedux v6.x.x(connect), v7.x.x(useSelect, useDispatch)](https://github.com/19Edwin92/JS-study/blob/main/REACT/ReactRedux/ReactReduxv6v7.md)<br/>
+- [ReactRedux v6.x.x(connect), v7.x.x(useSelect, useDispatch)](https://github.com/19Edwin92/JS-study/blob/main/REACT/ReactRedux/ReactReduxv6v7.md)<br/>
+- [ReduxStudy](https://github.com/19Edwin92/JS-study/blob/main/REACT/ReactRedux/ReduxStudy.md)<br/>
+
+[10. 카카오지도API,GeolocationAPI](https://github.com/19Edwin92/JS-study/blob/main/REACT/10카카오지도API,GeolocationAPI.md)<br/>
+[11. MSW 라이브러리](https://github.com/19Edwin92/JS-study/blob/main/REACT/11MSW.md)<br/>
 
 
-## 다음은 `타입스크립트의 타입정의`에 대한 공부를 간략하게 기록한 부분이다. 
+## `타입스크립트의 타입정의`
 
 [01. customDebounce](https://github.com/19Edwin92/JS-study/blob/main/typescript/01customDebounce.md)<br/>
 [02. StyledComponents&Props](https://github.com/19Edwin92/JS-study/blob/main/typescript/02StyledComponents&Props.md)<br/>
 
 
-## 다음은 `프로그래밍 철학`에 대한 공부를 간략하게 기록한 부분이다. 
+## `프로그래밍 철학`
 
 [01. 애자일-스크럼](https://github.com/19Edwin92/JS-study/blob/main/programmingPhilosophy/01애자일-스크럼.md)<br/>
 
+## `CS지식`
+[01. CPU와 메모리(1)](https://github.com/19Edwin92/JS-study/blob/main/CS/01CPUandMemory.md)<br/>
+[01. CPU와 메모리(2)](https://github.com/19Edwin92/JS-study/blob/main/CS/02CPUandMemory2.md)<br/>
 
 ##  DX : 개발자들의 개발경험향상 
 - UX는 사용자 개발을 향상한다면, DX는 개발의 경험을 향상시킬 수 있는 경험을 제공하는 개념이다. 
