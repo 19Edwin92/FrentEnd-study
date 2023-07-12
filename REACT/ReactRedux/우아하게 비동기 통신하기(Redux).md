@@ -103,7 +103,7 @@
     ```
 
       1. createAsyncThunk(비동기 통신을 위한 actionCreate)
-      2. Slice.extraReducer: {} 
+      2. Slice.extraReducer: {} // 진행중(`pending`), 성공(`fulfilled`)과 실패(`rejected`) 시의 코드를 작성해 주면 됩니다. 
       3. initialState를 확장시켜야 합니다
       <br/><br/>
 
