@@ -11,7 +11,11 @@
     const cookies = cookieString.split(';')
                                 .filter(cookies => cookies.includes("AccessToken"))[0]
                                 .split('=')[1] || null;
+
+    // 쿠키 삭제
+     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;                                
     ```
+
 
 2. 라이브러리 사용, `universal-cookie`
     ```jsx
