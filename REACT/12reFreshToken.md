@@ -64,4 +64,4 @@ instance.interceptors.response.use((config) => {
   };
 ```
 
-<img src="../../img/refreshToken.gif">
+<img src="../img/refreshToken.gif">
