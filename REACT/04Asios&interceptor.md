@@ -115,25 +115,23 @@ Axios는 node.js와 브라우저를 위한 Promise 기반 HTTP 통신 라이브�
       });
 
       // reFrechToken 을 활용해보자. 
-      instance.interceptors.request.use(
-        (config) => {
-          const accessToken =
-            document.cookie &&
-            document.cookie
-              .split(";")
-              .filter((cookies) => cookies.includes("accessToken"))[0]
-              ?.split("=")[1];
-          const reFreshToken =
-            document.cookie &&
-            document.cookie
-              .split(";")
-              .filter((cookies) => cookies.includes("reFreshToken"))[0]
-              ?.split("=")[1];
-
-          if (accessToken) return (config.headers.accesstoken = accessToken);
-          if (reFreshToken) return (config.headers.Authorization = reFreshToken);
-        }
-      );
+      instance.interceptors.request.use((config) => {
+        const accessToken =
+          document.cookie &&
+          document.cookie
+            .split(";")
+            .filter((cookies) => cookies.includes("accessToken"))[0]
+            ?.split("=")[1];
+        const reFreshToken =
+          document.cookie &&
+          document.cookie
+            .split(";")
+            .filter((cookies) => cookies.includes("reFreshToken"))[0]
+            ?.split("=")[1];
+        if (accessToken) config.headers.accesstoken = accessToken;
+        if (reFreshToken) config.headers.Authorization = reFreshToken;
+        return config;
+      });
 
       instance.interceptors.response.use((config) => {
         const expirationDate = new Date();
