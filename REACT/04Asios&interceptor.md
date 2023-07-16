@@ -114,18 +114,46 @@ Axios는 node.js와 브라우저를 위한 Promise 기반 HTTP 통신 라이브�
         return config;
       });
 
-      // 이를 function 키워드와 함께 에러시를 함께 핸들링 하면 아래와 같다. 
-      instaaxiosnce.interceptors.request.use(
-        function (config) {
-          console.log("인터셉터 요청 성공!");
-          config.headers.Authorization = token ? `Bearer ${token}` : "";
-          return config
-        },
-        function (error) {
-          console.log("인터셉터 요청 오류!");
-          return Promise.reject(error)
-        } 
-      )
+      // reFrechToken 을 활용해보자. 
+      instance.interceptors.request.use(
+        (config) => {
+          const accessToken =
+            document.cookie &&
+            document.cookie
+              .split(";")
+              .filter((cookies) => cookies.includes("accessToken"))[0]
+              ?.split("=")[1];
+          const reFreshToken =
+            document.cookie &&
+            document.cookie
+              .split(";")
+              .filter((cookies) => cookies.includes("reFreshToken"))[0]
+              ?.split("=")[1];
+
+          if (accessToken) return (config.headers.accesstoken = accessToken);
+          if (reFreshToken) return (config.headers.Authorization = reFreshToken);
+        }
+      );
+
+      instance.interceptors.response.use((config) => {
+        const expirationDate = new Date();
+        // expirationDate.setHours(expirationDate.getHours() + 1);
+        expirationDate.setSeconds(expirationDate.getSeconds() + 5);
+        const expires = expirationDate.toUTCString();
+        document.cookie = `accessToken=${config.headers.accesstoken}; expires=${expires} path=/;`;
+        document.cookie = `reFreshToken=${config.headers?.reFreshToken}; path=/;`;
+      });
+
+      // 쿠키의 만료시간을 설정해 보자. 
+      // 쿠키의 만료 시간을 설정하면 브라우저는 지정된 만료 날짜 및 시간에 도달하면 사용자 시스템에서 쿠키를 자동으로 제거합니다.
+      instance.interceptors.response.use((config) => {
+        const expirationDate = new Date();
+        // expirationDate.setHours(expirationDate.getHours() + 1);
+        expirationDate.setSeconds(expirationDate.getSeconds() + 30);
+        const expires = expirationDate.toUTCString();
+        document.cookie = `accessToken=${config.headers.accesstoken}; expires=${expires} path=/;`;
+        document.cookie = `reFreshToken=${config.headers?.reFreshToken}; path=/;`;
+      });
       ```
 
     - 응답시 

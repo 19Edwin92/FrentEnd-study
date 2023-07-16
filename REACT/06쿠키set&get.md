@@ -13,7 +13,21 @@
                                 .split('=')[1] || null;
 
     // 쿠키 삭제
-     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;                                
+     document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;      
+     
+    // 컴포넌트에서 조회 하기 
+    useEffect(() => {
+    // Get Cookies
+    // document.cookie 모든 걸 다 가져오다보니, accessToken=asdfas;refreshToken=asdfasdfa;
+    const acctoken =
+      document.cookie &&
+      document.cookie
+        .split(";")
+        .filter((cookies) => cookies.includes("accessToken"))[0]
+        ?.split("=")[1];
+    }, [])      
+
+                              
     ```
 
 
