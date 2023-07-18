@@ -65,3 +65,4 @@ instance.interceptors.response.use((config) => {
 ```
 
 <img src="../img/refreshToken.gif">
+
