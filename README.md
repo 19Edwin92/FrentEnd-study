@@ -53,6 +53,11 @@
 [01. CPU와 메모리(1)](https://github.com/19Edwin92/JS-study/blob/main/CS/01CPUandMemory.md)<br/>
 [01. CPU와 메모리(2)](https://github.com/19Edwin92/JS-study/blob/main/CS/02CPUandMemory2.md)<br/>
 
+
+## `CICD 관련지식`
+[01. 01CICD](https://github.com/19Edwin92/JS-study/blob/main/CICD/01CICD.md)<br/>
+[02. S3 배포](https://github.com/19Edwin92/JS-study/blob/main/CICD/02s3.md)
+
 ##  DX : 개발자들의 개발경험향상 
 - UX는 사용자 개발을 향상한다면, DX는 개발의 경험을 향상시킬 수 있는 경험을 제공하는 개념이다. 
 
