@@ -94,8 +94,9 @@ yarn add react-redux @types/react-redux @reduxjs/toolkit
     ```
 
 3. RTK-query 타입설정하기 
-[공식문서](https://junsangyu.gitbook.io/rtk-query/undefined)
-[공식문서](https://redux-toolkit.js.org/rtk-query/usage/customizing-queries)
+<br/>[공식문서](https://junsangyu.gitbook.io/rtk-query/undefined)
+<br/>[공식문서](https://redux-toolkit.js.org/rtk-query/usage/customizing-queries)
+<br/>[joshua1988.github](https://joshua1988.github.io/ts/guide/type-assertion.html)
 
     <details>
     <summary>RTK-query 통신성공 이미지 먼저 확인하기</summary>
@@ -194,6 +195,9 @@ export default instance;
 ### 7. 라이브러리(3) RTK-query
 <img src="../img/RTK-qu(3).gif">
 <br/><br/>
+
+- [비교, RTK쿼리 공식문서](https://redux-toolkit.js.org/rtk-query/comparison)
+- [비교, 리액트쿼리 공식문서](https://tanstack.com/query/latest/docs/react/comparison)
 
 <details>
 <summary>첫째, RTK-query-axiosBaseQuery</summary>
@@ -369,8 +373,10 @@ export default instance;
 
   - Slice의 TS는 `action: PayloadAction<DecodeToken>`에 대한 타입정의와
   - `selectDecode = (state: any) => state.decodeToken` Store에서 가져올 타입에 대한 정의이다. 
+  - `useSelector`의 타입스크리트 버전은 `useAppSelector`을 통해서 사용하게 되는데, 여기서 기억할 것은 `store`에 등록된 내용을 기준으로 등록된 리듀서를 불러와야 한다. 다른 이름으로 불러오면 undefined가 나온다. 
 
       ```tsx
+      // redux/modules/decodeTokenSlice.ts
       import { PayloadAction, createSlice } from "@reduxjs/toolkit";
       import { DecodeToken } from "../reduxType";
 
@@ -388,53 +394,154 @@ export default instance;
       })
 
       export const decodeTokenReducer = decodeTokenSlice.reducer
-      export const selectDecode = (state) => state.decodeToken
+      export const selectDecode = (state) => state.decodeTokenReducer
       export const {setDecodeToken, deleteDecodeToken} = decodeTokenSlice.actions
 
+      // redux/config/configureStro.ts
+      import { decodeTokenReducer }  from "../modules"
+      import { configureStore } from "@reduxjs/toolkit";
+
+      export const store = configureStore({
+        reducer : {
+          decodeTokenReducer,
+        },
+      })
       ```
 </details>
 
 <details>
-<summary>둘째, App.ts에서 사용하기 </summary>
+<summary>둘째, useAppSelector를 통해 DecodeSlice 내용 불러오고, useAppDispatch를 통해 DecodeSlice의 값 변경하기</summary>
 
-  - 코드 간결화를 위한 상대경로 설정 `import * as Redux from './redux'`
+```tsx
+import React, { useEffect } from 'react'
+import jwtDecode from 'jwt-decode'
+import * as Redux from './redux'
 
-      ```tsx
-      import React, { useEffect } from 'react'
-      import jwtDecode from 'jwt-decode'
-      import * as Redux from './redux'
+const App: React.FC = () => {
+  /* 
+      (1) 생성한 RTK 실행 : usePostLoginMutation
+      (2) Mutation으로 생성한 RTK는 2개의 배열을 가지고 있다. 첫째는 함수고 둘째는 함수의 결과로 생성되는 data 객체 이다. 
+      (3) 이를 구조분해 할당을 통해 아래와 같이 변수에 대입시킬 수 있다. 
+  */
+  const [postLoginRTK, { data:logindata, isSuccess,isError, error }] = Redux.usePostLoginMutation()
 
-      const App:React.FC = () =>  {
-        // RTKquery를 통해 비동기 함수 실행하기
-        const data = Redux.useGetStoriesRTKQuery({})
-        const [postLoginRTK] = Redux.usePostLoginMutation()
-        data && console.log("useGetStoriesRTKQuery", data);
+  /* 
+      (5) useAppSelector를 통해서 store에 등록된 selectDecode를 이와 같이 가져올 수 있다. 
+      (6) useAppDispatch를 통해서 dispatch 함수를 준비시킨다. 
+  */
+  const decodeToken = Redux.useAppSelector(Redux.selectDecode)
+  const dispatch = Redux.useAppDispatch()
 
-        // 리덕스 Store에서 데이터 가져오기 
-        const decodeToken = Redux.useAppSelector(Redux.selectDecode)
-        decodeToken && console.log("decodeToken", decodeToken);
+  /* 
+      (7) DecodeSlice(redux/modules)에 생성한 2개의 Actions에 대한 각각의 상황을 아래와 같이 만들었다. 
+      (8) 첫번째 상황은 decodeToken에 서버로부터 받아와서 쿠키에 저장된(Axios/interceptors) 토큰을 호출하여 전역상태에 set해보자.
+      (9) 비동기통신을 실행하는 RTK에 뒤따르는 후속조치는 React-query와 방식에 있어서 다른다. 
+          a. React-query는 프로미스 처리를 통해 onSuccess와 onError의 콜백함수를 연속적으로 실행히실 수 있다. 
+             비동기통신 -> 컴포넌트 마운트 -> 사용자UX생성이라면,
+          b. RTK-query는 통신의 결과에 따라 제공되는 isSuccess, logindata, isError, error 값에 따라서 
+             useEffect를 통한 사이드이펙트 처리를 실행해야 한다. 
+             그러기에 비동기통신 -> 컴포넌트 마운트 -> 사이드이펙트 -> 사용자UX생성를 생성한다. 
+             중간에 사이드이펙트를 위한 처리가 추가적으로 발생된다는 점이다. 
+          c. 그러나 RTK의 장점은 "공식문서"에서도 볼 수 있듯이, 
+             사전에 여러 엔드포인트가 있는 "API 슬라이스"를 정의하여 
+             하나의 중앙 위치에서 작업을 수행할 있다는 점에 있다. 
+             반면에 React Query 및 SWR을 사용하면 일반적으로 후크를 직접 정의하고 
+             모든 위치에서 즉시 수행할 수 있지만 흩어져 있다는 점이 유지관리 측면에서 제한된다. 
+          d. 나아가 React-query는 비동기통신을 위한 상태관리라이브러리 이기에, 
+             전역상태의 관리를 위해서는 ContextAPI, recoil 등의 추가적인 API들이 변행되어야 한다. 
+             반면에, RTK는 리덕스를 기반으로 하기에 하나의 store를 통해 
+             모든 컴포넌트에 비동기를 포함한 전역상태를 공유할 수있는 하나의 Provider를 가진다. 
+             이것이 가장 큰 장점이다. 
+  */
+  const onLogin = () => {
+    postLoginRTK({ email: "test5@g.commm", password: "qwer1234!" }) // 로그인 성공
+    // postLoginRTK({ email: "test5@g.commm", password: "qwer1234!!!" }) // 로그인 실패
+  }
 
-        // 리덕스 Modules의 actions 사용하기 
-        const dispatch = Redux.useAppDispatch()
-        
-        useEffect(() => {
-          const refreshToken = document.cookie?.split(';').filter(cookie => cookie.includes("refresh"))[0]?.split('=')[1];
+  /* 
+      (10) usePostLoginMutation에 뒤따르는 후소조치의 사이드이펙트를 통해 DecodeSlice의 Actions를 실행할 수 있다. 
+      (11) 아래의 조건분기를 통해서 비동기통신이 성공하면, 쿠키에 저장된 토큰을 호울하고, 이를 Decode한 결과를 DecodeSlice로 보낸다. 
+      (12) 그 결과에 따라서, return 아래에 보이는 실제 뷰파트 부분에 결과를 보여줄 수 있다. 
+      (13) 만약 통신에 실패하면 어떻게 제어할까? alert(myError.message)을 통해서 보여주자. 이미지는 코드 하단에 있다. 
+      (14) 이때 반환되는 값에 대한 ` 타입 `을 지정해 줘야 한다. 이를 위해서 코드 하단와 관련 부분에 있는 것과 같이 타입을 지정해 주었다. 
+  */
+  useEffect(() => {
+    if (isSuccess) {
+      const refreshToken = document.cookie?.split(';').filter(cookie => cookie.includes("refresh"))[0]?.split('=')[1];
+      console.log("usePostLoginMutation", logindata.info);
+      dispatch(Redux.setDecodeToken(jwtDecode(refreshToken)));
+    }
+    if(isError) {
+      const axiosError: Redux.ErrorType = error as Redux.ErrorType;
+      alert(axiosError.data.error.message);
+      console.log("isError", isError);
+    }  
+  }, [dispatch, isSuccess, logindata, isError, error])
 
-          if (refreshToken) {
-            const decode = jwtDecode(refreshToken) as Redux.DecodeToken; // 디코드된 대상의 타입을 지정하기 
-            console.log(decode);
-            dispatch(Redux.setDecodeToken(decode));
-          }
-        }, [dispatch]);
-          
-        return (
-          <div>
-            <h1>RTK-Query, Redux</h1>
-            <button onClick={()=>postLoginRTK({email:"test5@g.commm", password:"qwer1234!"})}>로그인하기</button>
-          </div>
-        )
+  /* 
+      (15) 이번에는 로그아웃을 통한 DecodeSlice의 Actions의 deleteDecodeToken를 가정해보자. 
+      (16) 먼저 토큰의 만료는 현재시간보다 과거를 설정해주면 된다는 점을 기억하자. expires=${pastDate}
+           a. 이를 위해, new Date(0).toUTCString();를 설정해주었다. 
+      (18) 이번에는 DecodeSlice의 값을 설정에 따라 초기화 해주는 단계이다. 
+           a. 이를 위해 dispatch를 활용하여 deleteDecodeToken() Actions를 실행시켜주었다. 
+  */
+  const onLoginout = () => {
+    const pastDate = new Date(0).toUTCString();
+    document.cookie = `accessToken=; expires=${pastDate}; path=/;`;
+    document.cookie = `refreshtoken=; expires=${pastDate}; path=/;`;
+    dispatch(Redux.deleteDecodeToken())
+  }
+
+  return (
+     <div>
+      <h1>RTK-Query, Redux</h1>
+      {!decodeToken.nickname
+        ? <button onClick={onLogin}>로그인하기</button>
+        : (<><button onClick={onLoginout}>로그아웃하기</button><p>{decodeToken.nickname}</p></>)
       }
+    </div>
+  )
+}
 
-      export default App
-      ```
+// redux/api/RTKquery.ts ==> Error에 대한 타입정의(ErrorType)
+export interface ErrorType {
+  status: number | undefined;
+  data: any;
+}
+```
+
+<img src='../img/RTK-qu(6).png' width="100%">
+</details>
+
+
+### 9. 라이브러리(5) Mocking Server Workers
+
+<details>
+<summary>첫째, MSW란? 그리고 설치하기</summary>
+
+[MSW 라이브러리](https://github.com/19Edwin92/JS-study/blob/main/REACT/11MSW.md)에 대한 소개는 다른 곳에 정리해두었기에 이를 참고하면 된다. 여기서는 이를 타입스크립트 버전으로 상승시키는 이다. 먼저 기본적인 MSW 구축은 아는 부분이기에 진행하였고, 타입스크립트 부분은 [퍼렁꽁치](https://velog.io/@ckm960411/Mock-Service-Worker-기본적-사용법-및-TypeScript-적용하기)를 참고하였다. 
+
+```bash
+yarn add msw
+yarn msw init public/ — save // msw 초기설정을 위한 선언
+```
+
+살펴보니 msw 자체에 대한 타입지정은 별도로 필요가 없는 것 같다. 
+</details>
+
+  - `[MSW] Mocking enabled`라는 문구하 콘솔에 찍히면 준비는 완료된 것이다. 
+
+    <img src="../img/RTK-qu-MSW(1).png" width="100%">
+
+<details>
+<summary>둘째, MSW에서의 타입정의</summary>
+
+[MSW 라이브러리](https://github.com/19Edwin92/JS-study/blob/main/REACT/11MSW.md)에 대한 소개는 다른 곳에 정리해두었기에 이를 참고하면 된다. 여기서는 이를 타입스크립트 버전으로 상승시키는 이다. 먼저 기본적인 MSW 구축은 아는 부분이기에 진행하였고, 타입스크립트 부분은 [퍼렁꽁치](https://velog.io/@ckm960411/Mock-Service-Worker-기본적-사용법-및-TypeScript-적용하기)를 참고하였다. 
+
+```bash
+yarn add msw
+yarn msw init public/ — save // msw 초기설정을 위한 선언
+```
+
+살펴보니 msw 자체에 대한 타입지정은 별도로 필요가 없는 것 같다. 
 </details>
