@@ -222,4 +222,29 @@ const App = () => {
 
   return 
 }
+
+
+
+
+// 로그인을 알린 후, 서버로부터 활동 중인 회원의 리스트를 받을 때 
+const App = () => {
+  const {workspase} = useParams()
+  const [sockets, disconnect] = useSocket(workspase)
+
+  useEffect(()=> {
+    console.log("DMlist가 바뀌었다.", workspase)
+  }, [workspase])
+
+  useEffect(() => {
+    sockets?.on("onlineList", (data) => {setOnlineList(data)})
+    sockets?.on("dm", onMessage)
+    console.log("socket on dm", sockets?.hanlistenrens('dm', socket))
+    return () => {
+      sockets?.off('dm', onMessage) // 클린업이 항상 on과 짝지어 있어야 합니다. 
+      sockets?.off('onlineList')
+    }
+  }, [sockets])
+
+  return 
+}
 ```
