@@ -1,13 +1,34 @@
 ## CloudFront
 ### 참고글 (1)
-[문서1](https://kukim.tistory.com/144)
-<br/> [문서2, 벨로퍼트](https://react-etc.vlpt.us/08.deploy-s3.html)
+[문서1](https://kukim.tistory.com/144)<br/> 
+[문서2, 벨로퍼트](https://react-etc.vlpt.us/08.deploy-s3.html)<br/>
+[문서3](https://victorydntmd.tistory.com/335)
 
 장점을 정리하면 
-1. S3에 커스텀 도메인과 HTTPsa 지원
+1. S3에 커스텀 도메인과 HTTPS를 지원
 2. CDN을 통해 더 빠른 페이지 응답속도가 제공된다. 
 
+[벨로퍼트](https://react-etc.vlpt.us/08.deploy-s3.html)의 깃북에 따르면, CloudFront를 사용하여 S3 사용하여 CDN에 태워줌으로서, 위의 두 가지 장점들을 챙길 수 있게 된다. 
+
+[생활코딩](https://youtu.be/aeCatL0Fch8)에 따르면, Cache, CDN을 알아야 핟나. 
+
+먼저 캐시(Cache)이다. 웹서버, PHP, 노드는 동적으로 웹페이지(html) 문서를 요청-응답으로 전달합니다. 준비된 HTML을 보내주는 것보다 동적으로 리소스를 제공한다는 점에서 요금이 발생홥니다. 
+
+그런데 이러한 과정이 반복된다면 개발자는 비용을, 사용자는 경험이 떨어집니다. 그렇다면 동일한 내용은 저장하고 보내줄 수 있다면? 바로 이를 캐시 라고 하고, 이를 전담하는 캐싱 서버가 있는데, 이러한 캐싱 서버 가운데 하나가 cloudfront 입니다. 
+
+다음으로는 세계화입니다. Content Delivery Network :: CDN이라 부르는데 전 세계 이용자들에게 빠른 서비스를 가능하게 됩니다. AWS의 인프라를 이용하기 때문입니다. 
+
+CF를 통해서 웹서버의 부담을 경감, 전세계 사용자를 대상으로 고속으로 서비스를 제공하는 것이다. 아래의 사진은 위의 사례를 따라서 적용했을 때이다. 
+
+<img src="../img/S3-CF(1) 적용전.png">
+<img src="../img/S3-CF(2) 적용 후 .png">
+
+향상률을 계산해보자. 
+- `향상률 = ((이전 처리속도-현재 처리속도)/이전 처리속도) * 100` 했을 때의 결과이다. 
+
+위의 이미지에서 보았을 때, `((24.5 - 7.65) / 24.5) * 100`는 처리속도가 24.5 ms에서 7.65 ms로 개선되었음에 대한 지표로, 기존대비 약 68.98% 향상되었음을 볼 수 있다. 그런데 새로고침해도 화면에는 변화가 없는 것을 볼 수 있고, 오히려 에러처리가 되는 것을 볼 수 있다. 이는 캐시가 살아있기 때문에 그렇다. 이를 위해서 캐시를 무력화 해줘야 한다. 
+
+- CloudFront는 캐시를 설정없이는 24시간 보관합니다. 이를 위해서는 무효화 해줄 필요가 있습니다. 그래야 origin의 내용을 불러오게 됩니다. [공식문서](https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
 
 
-
-
+- 무효화는 돈이 듭니다. 또한 시간이 쫌 걸립니다. 
