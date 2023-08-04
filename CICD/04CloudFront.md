@@ -31,4 +31,47 @@ CF를 통해서 웹서버의 부담을 경감, 전세계 사용자를 대상으�
 - CloudFront는 캐시를 설정없이는 24시간 보관합니다. 이를 위해서는 무효화 해줄 필요가 있습니다. 그래야 origin의 내용을 불러오게 됩니다. [공식문서](https://docs.aws.amazon.com/ko_kr/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
 
 
-- 무효화는 돈이 듭니다. 또한 시간이 쫌 걸립니다. 
+- 그러나 무효화는 유료라는 점을 기억하자. 
+
+### 순서대로, S3버킷까지는 이전의 정리를 참고, CloudFront
+1. 배포 생성 > 원본 도메인을 클릭하면, S3 버킷에 있는 모든 내용이 나열된다. 그 가운데 원하는 버킷을 클릭하면 된다.  
+
+    <img src="../img/CF(1).png">
+
+2. 원본 엑세스를 Legacy access identities 를 선택하고, 새 OAI를 생성한다. 이때 OAI는 토글을 열어보면 나와 있기에, 그걸 선택하면 되고, 버킷 정택을 자동으로 업데이트하도록 설정하면 된다. 
+
+3. Origin Shield 활성화를 하고, 버킷의 리전을 선택한다. 
+
+    <img src='../img/CF(2).png'>
+
+4. 기본 캐시 동자 > 뷰어 프로토콜 정책을 Redirect HTTP to HTTPS로 전환해준다. 이를 통해서 기본적으로 웹서비스는 HTTPS를 프로토콜로 가지게 되지만, 이제는 SSL 인증서까지 더해줘야 서버와 소통할 때 문제 없이 소통할 수 있다. 
+
+    <img src='../img/CF(3).png'>
+
+5. 웹 애플리케이션 방화벽인데, 유료라니, 일단은 무료로 가자. 여기까지 하고 나머지는 쭉 내려서 하단의 `배포 생성`을 클릭하자. 
+
+    <img src='../img/CF(4).png'>
+
+### Route 53과 가비아 도메인 연결하기     
+
+1. Route 53에서 호스팅 생성하기 
+2. AWS - Route53으로 이동하고, `호스팅 영역 생성`을 클릭하자. 실제로 존재하는 예를 들어 가비아에서 구매한 도메인을 입력하소 생성하면 된다. 
+
+    <img src='../img/CF(5).png'>
+    <img src='../img/CF(6).png'>
+
+3. 가비아로 이동해서 `Route53`에서 생성된 `값/트래픽 라우팅 대상`의 내용을 네임서버로 등록해 주면 된다. 
+
+<img src='../img/CF(7).png'>
+<img src='../img/CF(8).png'>
+
+### SSL 인증서 발급을 위한 AWS-ACM 발급
+
+[ACM](https://us-east-1.console.aws.amazon.com/acm/home)으로 이동하고, 인증서 요청을 한 후에, 도메인이름 앞에 와일드카드를 붙여서 `*.도메인.com`을 입력함으로 인증서를 요청하자. 그리고 무한 기다림의 시간 속에 들어가면 된다. 보통은 15분이 걸린다는데, 나는 더 걸리는 것 같다. 
+
+
+<img src='../img/CF(9).png'>
+<img src='../img/CF(10).png'>
+
+
+[이 친구가 답이네...](https://velog.io/@whljm1003/AWS-S3배포부터-https적용까지-1)
